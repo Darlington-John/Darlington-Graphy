@@ -23,7 +23,11 @@ const UnifyDataSection = () => {
   ];
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const videoRef = useRef(null);
-  useEffect(() => {
+
+useEffect(() => {
+  // Check if videoRef.current is not null before using it
+  if (videoRef.current) {
+    // Attempt to play the video
     videoRef.current.play().catch(error => {
       // Autoplay was prevented, let's handle it
       console.error('Autoplay was prevented:', error);
@@ -38,13 +42,19 @@ const UnifyDataSection = () => {
       }
     };
 
-    videoRef.current.addEventListener('ended', handleVideoEnded);
+    // Check if videoRef.current is not null before adding event listener
+    if (videoRef.current) {
+      videoRef.current.addEventListener('ended', handleVideoEnded);
+    }
 
     // Cleanup the event listener on unmount
     return () => {
-      videoRef.current.removeEventListener('ended', handleVideoEnded);
+      if (videoRef.current) {
+        videoRef.current.removeEventListener('ended', handleVideoEnded);
+      }
     };
-  }, [currentVideoIndex, videos.length]);
+  }
+}, [currentVideoIndex, videos.length]);
     return (<section className="flex   flex-col gap-32 sm:gap-10 px-36 py-20 xl:px-20 md:pt-32 xs:px-4 items-center " >
 <div className="grid grid-cols-2 w-full gap-10 
  xl:grid-cols-1"  >
